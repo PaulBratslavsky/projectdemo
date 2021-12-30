@@ -1,20 +1,19 @@
-import { Container } from 'react-bootstrap';
-import Article from './components/Article/article';
-import useResource from "./hooks/useResource";
-
-const articlesURL = "http://localhost:1337/articles";
+import { Container } from "react-bootstrap";
+import Articles from './components/Articles/articles';
+import ArticleDetail from './components/ArticleDetail/articleDetail';
+import NotFound from './components/NotFound/notFound';
+import { Routes, Route } from "react-router-dom";
 
 function App() {
-  const { data, loading, error } = useResource(articlesURL);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error:{error.message}</div>;
-
-  console.log(data);
-
-  return <Container className="App">
-    {data.map(article => <Article key={article.id} article={article} />)}
-  </Container>;
+  return (
+    <Container className="App">
+      <Routes>
+        <Route path="/" element={<Articles />} />
+        <Route path="/article/:articleID" element={<ArticleDetail />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Container>
+  );
 }
 
 export default App;

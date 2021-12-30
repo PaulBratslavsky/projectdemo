@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export default function useResource(resourceURL) {
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
