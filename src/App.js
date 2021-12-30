@@ -1,25 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import { Container } from 'react-bootstrap';
+import Article from './components/Article/article';
+import useResource from "./hooks/useResource";
+
+const articlesURL = "http://localhost:1337/articles";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const { data, loading, error } = useResource(articlesURL);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error:{error.message}</div>;
+
+  console.log(data);
+
+  return <Container className="App">
+    {data.map(article => <Article key={article.id} article={article} />)}
+  </Container>;
 }
 
 export default App;
