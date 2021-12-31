@@ -10,10 +10,13 @@ export default function useMutation(queryURL) {
     (async () => {
       try {
         setLoading(true);
-        setError(null);
         const response = await fetch(queryURL, options);
         const data = await response.json();
-        setData(data);
+        if (data.error) {
+          setError(data);
+        } else {
+          setData(data);
+        }
       } catch (error) {
         setError(error);
       } finally {

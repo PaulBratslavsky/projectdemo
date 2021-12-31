@@ -91,7 +91,7 @@ export default function AddArticle() {
               as="textarea"
               placeholder="Enter project description"
               rows={3}
-              required
+              // required
             />
           </Form.Group>
           <Button variant="primary" type="submit">
