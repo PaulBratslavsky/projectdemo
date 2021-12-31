@@ -8,7 +8,7 @@ const API_URL = "http://localhost:1337";
 export default function Article({ article }) {
   
   const { id, title, content, author, thumbnail, likes, created_at } = article;
-  const { url: imageURL } = thumbnail.formats.large;
+  // const { url: imageURL } = thumbnail?.formats.large;
   const date = format(new Date(created_at), "MMMM dd, yyyy");
 
   return (
@@ -19,12 +19,12 @@ export default function Article({ article }) {
       </div>
 
       <Link to={`/article/${id}`}>
-        <Image src={API_URL + imageURL} />
+       { thumbnail && <Image src={API_URL + thumbnail.formats.large.url} /> }
         <ReactMarkdown>{content}</ReactMarkdown>
       </Link>
 
       <div className="d-flex justify-content-between">
-        <span>author: {author.username}</span>
+        { author && <span>author: {author.username}</span> }
         <span>Posted on {date}</span>
       </div>
     </div>

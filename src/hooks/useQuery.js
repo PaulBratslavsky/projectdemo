@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
-export default function useResource(resourceURL) {
+export default function useQuery(resourceURL) {
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -12,7 +11,8 @@ export default function useResource(resourceURL) {
       try {
         setLoading(true);
         setError(null);
-        const { data } = await axios.get(resourceURL);
+        const response = await fetch(resourceURL);
+        const data = await response.json();
         setData(data);
       } catch (error) {
         setError(error);
