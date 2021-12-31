@@ -37,8 +37,6 @@ export default function AddArticle() {
     });
   }
 
-  if (loading) return <Spinner animation="grow" variant="info" />;
-  if (error) return <div>Error: {error.message}</div>;
   if (data) return <Navigate to="/" />;
 
   return (
@@ -54,7 +52,7 @@ export default function AddArticle() {
               onChange={handleSetFields}
               type="text"
               placeholder="Title"
-              required
+              // required
             />
           </Form.Group>
 
@@ -91,12 +89,17 @@ export default function AddArticle() {
               as="textarea"
               placeholder="Enter project description"
               rows={3}
-              // required
+              required
             />
           </Form.Group>
           <Button variant="primary" type="submit">
             Submit
           </Button>
+          <div className='text-danger d-flex justify-content-center'>
+            {error && error.message}
+            {loading &&  <Spinner animation="grow" variant="info" />}
+
+          </div>
         </fieldset>
       </Form>
       <BackButton />
