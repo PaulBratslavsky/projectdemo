@@ -7,13 +7,13 @@ export default function useMutation(queryURL) {
   const [error, setError] = useState(null);
 
   function getData(options = {}) {
-    console.log(queryURL, options, "FROM HOOK DATA");
     (async () => {
       try {
         setLoading(true);
         setError(null);
-        const { response } = await fetch(queryURL, options);
-        setData(response);
+        const response = await fetch(queryURL, options);
+        const data = await response.json();
+        setData(data);
       } catch (error) {
         setError(error);
       } finally {
