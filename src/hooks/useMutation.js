@@ -10,8 +10,9 @@ export default function useMutation(queryURL) {
       setLoading(true);
       const response = await fetch(queryURL, options);
       const dataResponse = await response.json();
-      if (dataResponse.error) {
-        setError(dataResponse);
+
+      if (dataResponse.error || dataResponse.statusText === "Bad Request") {
+        setError(dataResponse || dataResponse.error);
       } else {
         setData(dataResponse);
       }

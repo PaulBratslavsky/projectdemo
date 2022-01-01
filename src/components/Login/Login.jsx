@@ -3,22 +3,21 @@ import BackButton from "../BackButton/backButton";
 import { Form, Col, Button, Spinner } from "react-bootstrap";
 import useFormFields from "../../hooks/useFormFields";
 import useMutation from "../../hooks/useMutation";
-import { UserContext } from '../../context/UserContext';
-import { Navigate } from 'react-router-dom';
+import { UserContext } from "../../context/UserContext";
+import { Navigate } from "react-router-dom";
 
 const INITIAL_FORM_STATE = {
   identifier: "",
   password: "",
 };
 
-
 export default function Login() {
-  const {user, setUser} = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
-  const { fields, handleSetFields, resetFields } =
+  const { fields, handleSetFields } =
     useFormFields(INITIAL_FORM_STATE);
   const [login, { loading, error }] = useMutation(
-    `http://localhost:1337/auth/local`,
+    `http://localhost:1337/auth/local`
   );
 
   function handleSubmit(event) {
@@ -30,12 +29,11 @@ export default function Login() {
       },
       body: JSON.stringify(fields),
     }).then((data) => {
-      setUser(data);
+      if (data.user) setUser(data);
     });
   }
 
   if (user) return <Navigate to="/" />;
-
   return (
     <div>
       <Form onSubmit={handleSubmit}>
@@ -69,14 +67,11 @@ export default function Login() {
             Submit
           </Button>
           <div className="text-danger d-flex justify-content-center">
-            {error && error.message}
+            {error && error.message[0].messages[0].message}
             {loading && <Spinner animation="grow" variant="info" />}
           </div>
         </fieldset>
       </Form>
-      <Button variant="secondary" onClick={resetFields}>
-        Reset Fields
-      </Button>
       <BackButton />
     </div>
   );
