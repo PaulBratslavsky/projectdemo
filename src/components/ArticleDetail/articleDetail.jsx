@@ -1,19 +1,29 @@
 import React from "react";
 import useQuery from "../../hooks/useQuery";
-import { Spinner, Image } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Spinner, Image, Button } from "react-bootstrap";
+import { useParams, useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { format } from "date-fns";
-import BackButton from '../BackButton/backButton';
+import BackButton from "../BackButton/backButton";
+import NotFound from "../NotFound/notFound";
+import useMutation from '../../hooks/useMutation';
 
 const API_URL = "http://localhost:1337";
 const articleURL = "http://localhost:1337/articles/";
 
 export default function ArticleDetail() {
   const { articleID } = useParams();
+  const navigate = useNavigate();
   const { data, loading, error } = useQuery(articleURL + articleID);
-
-  if (loading) return <Spinner animation="grow" variant="info" />;
+  const [deleteArticle, { loading: deleteLoading }] = useMutation(articleURL + articleID)
+  
+  function handleDelete() {
+    deleteArticle({ method: "DELETE" }).then(() => navigate("/"));
+  }
+  
+  if (loading || deleteLoading) return <Spinner animation="grow" variant="info" />;
+  if (error && error.message === "Unexpected token N in JSON at position 0")
+    return <NotFound />;
   if (error) return <div>Error:{error.message}</div>;
   if (!data) return null;
 
@@ -27,15 +37,16 @@ export default function ArticleDetail() {
         <div>likes: {likes}</div>
       </div>
 
-      { thumbnail && <Image src={API_URL + thumbnail.formats.large.url} /> }
+      {thumbnail && <Image src={API_URL + thumbnail.formats.large.url} />}
 
       <ReactMarkdown>{content}</ReactMarkdown>
 
       <div className="d-flex justify-content-between">
-        { author && <span>author: {author.username}</span> }
+        {author && <span>author: {author.username}</span>}
         <span>Posted on {date}</span>
       </div>
-
+      <Button variant="outline-danger" onClick={handleDelete}>Delete</Button>
+      <Button variant="outline-primary" onClick={() => navigate(`/edit-article/${articleID}`)}>Edit</Button>
       <BackButton />
     </div>
   );

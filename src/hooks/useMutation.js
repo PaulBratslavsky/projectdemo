@@ -1,39 +1,27 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function useMutation(queryURL) {
-
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  function getData(options = {}) {
-    (async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(queryURL, options);
-        const data = await response.json();
-        if (data.error) {
-          setError(data);
-        } else {
-          setData(data);
-        }
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
+  async function getData(options = {}) {
+    try {
+      setLoading(true);
+      const response = await fetch(queryURL, options);
+      const dataResponse = await response.json();
+      if (dataResponse.error) {
+        setError(dataResponse);
+      } else {
+        setData(dataResponse);
       }
-    })();
+      return dataResponse;
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
-  return [ getData, { data, loading, error }];
+  return [getData, { data, loading, error }];
 }
-/**
- * 
- *  const { response } = await fetch(queryURL, { 
-          method: type,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-         });
- */
